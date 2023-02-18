@@ -15,7 +15,7 @@ const NavBar = ({ onCompanyChangeHandler, selectedCompanyId }) => {
 
   return (
     <div className={styles.container}>
-      <ul>{listItems}</ul>
+      <ul className={styles.ulContainer}>{listItems}</ul>
     </div>
 
   );

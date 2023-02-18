@@ -118,7 +118,11 @@ const StockMarketPage = ({ selectedCompanyId, firebaseApp }) => {
     // getAllStockData();
   }, [selectedCompanyId]);
 
-  return <Line options={options} data={lineGraphData} />;
+  return (
+    <div style={{ height: '90%', width: '85%', 'margin-left': '200px' }}>
+      <Line options={options} data={lineGraphData} />
+    </div>
+  );
 };
 
 export default StockMarketPage;
