@@ -14,6 +14,7 @@ import {
   getFirestore, doc, getDoc, collection, getDocs,
 } from 'firebase/firestore';
 import { COMPANIES_STOCK_MARKET, STOCK_DB_FIREBASE_FIRE_STORE } from '../../utils/constants';
+import { getReadableFileNameTimeStampFromEpoch } from '../../utils/dateTimeHelpers';
 
 ChartJS.register(
   CategoryScale,
@@ -91,13 +92,14 @@ const StockMarketPage = ({ selectedCompanyId, firebaseApp }) => {
       if (docSnap.exists()) {
         const data = docSnap.data();
         console.log('Document data:', data);
-        const labels = Object.keys(data);
+        const keys = Object.keys(data).sort((a, b) => a - b);
+        const labels = keys.map((dateString) => getReadableFileNameTimeStampFromEpoch(Number(dateString)));
         console.log(`label:${labels}`);
 
         const datasets = [
           {
             label: COMPANIES_STOCK_MARKET.find((x) => x.id === selectedCompanyId).name,
-            data: labels.map((key) => data[key]),
+            data: keys.map((key) => data[key]),
             borderColor: 'rgb(255, 99, 132)',
             backgroundColor: 'rgba(255, 99, 132, 0.5)',
           },
@@ -109,7 +111,7 @@ const StockMarketPage = ({ selectedCompanyId, firebaseApp }) => {
         });
       } else {
       // doc.data() will be undefined in this case
-        console.log('No such document!');
+        console.warn('No such document!');
       }
     };
     initStockData();

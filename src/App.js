@@ -21,7 +21,7 @@ const App = () => {
 
   return (
     <div>
-      <NavBar onCompanyChangeHandler={setSelectedCompanyId} />
+      <NavBar onCompanyChangeHandler={setSelectedCompanyId} selectedCompanyId={selectedCompanyId} />
       <StockMarketPage firebaseApp={app} selectedCompanyId={selectedCompanyId} />
     </div>
   );
