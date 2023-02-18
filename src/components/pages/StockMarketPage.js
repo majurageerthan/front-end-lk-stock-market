@@ -40,52 +40,12 @@ const options = {
 };
 
 const StockMarketPage = ({ selectedCompanyId, firebaseApp }) => {
-  const [lineGraphData, setLineGraphData] = useState({
-    labels: [],
-    datasets: [],
-  });
+  const [stockMarketData, setStockMarketData] = useState({});
 
   useEffect(() => {
-    console.log(`saeaeae ${selectedCompanyId}`);
-    const getAllStockData = async () => {
-      const db = getFirestore(firebaseApp);
-      const querySnapshot = await getDocs(collection(db, STOCK_DB_FIREBASE_FIRE_STORE));
-      // const stockDataSetArray = [];
-      const datasets = [];
-      let labels;
-      querySnapshot.forEach((document) => {
-        const data = document.data();
-        // stockDataSetArray.push(data);
-        console.log(data);
-        if (!labels) {
-          labels = Object.keys(data);
-        }
-        const randomColor = Math.floor(Math.random() * 16777215).toString(16);
-        datasets.push({
-          label: document.id,
-          data: labels.map((key) => data[key]),
-          borderColor: `#${randomColor}`,
-          backgroundColor: 'rgba(255, 99, 132, 0.5)',
-        });
-      });
-
-      // const slicedArray = stockDataSetArray.slice(0, 2);
-      // console.log(slicedArray);
-
-      // const datasets = slicedArray.map((set) => ({
-      //   label: 'CSE',
-      //   data: labels.map((key) => set[key]),
-      //   borderColor: 'rgb(255, 99, 132)',
-      //   backgroundColor: 'rgba(255, 99, 132, 0.5)',
-      // }));
-
-      setLineGraphData({
-        labels,
-        datasets: datasets.slice(0, 10),
-      });
-    };
-
     const initStockData = async () => {
+      console.log(`initStockData ${selectedCompanyId}`);
+
       const db = getFirestore(firebaseApp);
       const docRef = doc(db, STOCK_DB_FIREBASE_FIRE_STORE, `${selectedCompanyId}`);
       const docSnap = await getDoc(docRef);
@@ -104,23 +64,29 @@ const StockMarketPage = ({ selectedCompanyId, firebaseApp }) => {
             backgroundColor: 'rgba(255, 99, 132, 0.5)',
           },
         ];
-
-        setLineGraphData({
-          labels,
-          datasets,
+        setStockMarketData({
+          ...stockMarketData,
+          [selectedCompanyId]: {
+            labels,
+            datasets,
+          },
         });
       } else {
       // doc.data() will be undefined in this case
         console.warn('No such document!');
       }
     };
-    initStockData();
-    // getAllStockData();
+
+    if (!stockMarketData[selectedCompanyId] || Object.keys(stockMarketData[selectedCompanyId])?.length === 0) {
+      initStockData();
+    }
   }, [selectedCompanyId]);
 
+  const isStockDataAvailable = stockMarketData?.[selectedCompanyId] && Object.keys(stockMarketData?.[selectedCompanyId]).length !== 0;
+
   return (
-    <div style={{ height: '90%', width: '85%', 'margin-left': '200px' }}>
-      <Line options={options} data={lineGraphData} />
+    <div style={{ height: '90%', width: '85%', marginLeft: '200px' }}>
+      {isStockDataAvailable && <Line options={options} data={stockMarketData?.[selectedCompanyId]} />}
     </div>
   );
 };

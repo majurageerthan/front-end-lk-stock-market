@@ -37,3 +37,41 @@ export const COMPANIES_STOCK_MARKET = [
     symbol: 'JKH.N0000',
   },
 ];
+
+// const getAllStockData = async () => {
+//   const db = getFirestore(firebaseApp);
+//   const querySnapshot = await getDocs(collection(db, STOCK_DB_FIREBASE_FIRE_STORE));
+//   // const stockDataSetArray = [];
+//   const datasets = [];
+//   let labels;
+//   querySnapshot.forEach((document) => {
+//     const data = document.data();
+//     // stockDataSetArray.push(data);
+//     console.log(data);
+//     if (!labels) {
+//       labels = Object.keys(data);
+//     }
+//     const randomColor = Math.floor(Math.random() * 16777215).toString(16);
+//     datasets.push({
+//       label: document.id,
+//       data: labels.map((key) => data[key]),
+//       borderColor: `#${randomColor}`,
+//       backgroundColor: 'rgba(255, 99, 132, 0.5)',
+//     });
+//   });
+
+//   // const slicedArray = stockDataSetArray.slice(0, 2);
+//   // console.log(slicedArray);
+
+//   // const datasets = slicedArray.map((set) => ({
+//   //   label: 'CSE',
+//   //   data: labels.map((key) => set[key]),
+//   //   borderColor: 'rgb(255, 99, 132)',
+//   //   backgroundColor: 'rgba(255, 99, 132, 0.5)',
+//   // }));
+
+//   // setLineGraphData({
+//   //   labels,
+//   //   datasets: datasets.slice(0, 10),
+//   // });
+// };
