@@ -83,7 +83,7 @@ const StockMarketPage = ({
     }
   }, [selectedCompanyId]);
 
-  const isStockDataAvailable = stockMarketData?.[selectedCompanyId] && Object.keys(stockMarketData?.[selectedCompanyId]).length !== 0;
+  const isStockDataAvailable = selectedCompanyId && stockMarketData?.[selectedCompanyId] && Object.keys(stockMarketData?.[selectedCompanyId]).length !== 0;
 
   return (
     <div style={{ height: '90%', width: '85%', marginLeft: '200px' }}>

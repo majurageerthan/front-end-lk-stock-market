@@ -4,6 +4,8 @@
   left: 2px;
   z-index: 10;
   width: 195px;
+  overflow: auto;
+  max-height: 100vh;
 }
 
 .btnContainer {

@@ -1,11 +1,13 @@
 import './App.css';
 import { initializeApp } from 'firebase/app';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { getRemoteConfig, fetchAndActivate, getValue } from 'firebase/remote-config';
 import { getFirestore } from 'firebase/firestore/lite';
 import StockMarketPage from './components/pages/StockMarketPage';
 import NavBar from './components/navBar/NavBar';
 import { FIREBASE_CONFIG_COMPANIES_STOCK_MARKET_DATA } from './utils/constants';
+import pinIcon from './pinIcon.png';
+import { getPinnedCompanyIds, removePinnedCompanyId, savePinnedCompanyId } from './utils/localStorageHelper';
 
 const App = () => {
   const firebaseConfig = {
@@ -19,6 +21,11 @@ const App = () => {
   };
   const [COMPANIES_STOCK_MARKET, setCompaniesStockMarket] = useState([]);
   const [selectedCompanyId, setSelectedCompanyId] = useState(COMPANIES_STOCK_MARKET?.[0]?.id);
+  const [pinnedCompanies, setPinnedCompanies] = useState([]);
+
+  useEffect(() => {
+    setPinnedCompanies(getPinnedCompanyIds());
+  }, []);
 
   const app = initializeApp(firebaseConfig);
   const remoteConfig = getRemoteConfig(app);
@@ -39,6 +46,18 @@ const App = () => {
     fetchDataFromConfigAndUpdate();
   }
 
+  const onClickPinCompanyHandler = async () => {
+    const alreadyPinnedCompanies = getPinnedCompanyIds();
+
+    if (alreadyPinnedCompanies?.includes(selectedCompanyId)) {
+      removePinnedCompanyId(selectedCompanyId);
+    } else {
+      savePinnedCompanyId(selectedCompanyId);
+    }
+
+    setPinnedCompanies(getPinnedCompanyIds());
+  };
+
   // remoteConfig.settings.minimumFetchIntervalMillis = 3600000;
   return (
     <div>
@@ -46,7 +65,13 @@ const App = () => {
         onCompanyChangeHandler={setSelectedCompanyId}
         selectedCompanyId={selectedCompanyId}
         COMPANIES_STOCK_MARKET={COMPANIES_STOCK_MARKET}
+        pinnedCompanies={pinnedCompanies}
       />
+
+      <div className="ribbon inner">
+        <img src={pinIcon} alt="Logo" onClick={onClickPinCompanyHandler} role="presentation" />
+      </div>
+
       <StockMarketPage
         fireStoreDb={fireStoreDb}
         selectedCompanyId={selectedCompanyId}

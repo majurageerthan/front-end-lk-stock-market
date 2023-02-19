@@ -27,5 +27,6 @@ module.exports = {
     'jsx-a11y/label-has-associated-control': 'off',
     'max-len': ['error', { code: 200 }],
     'react/jsx-props-no-spreading': 'off',
+    'jsx-a11y/click-events-have-key-events': 'off',
   },
 };
