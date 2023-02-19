@@ -1,7 +1,6 @@
 import styles from './styles.module.css';
-import { COMPANIES_STOCK_MARKET } from '../../utils/constants';
 
-const NavBar = ({ onCompanyChangeHandler, selectedCompanyId }) => {
+const NavBar = ({ onCompanyChangeHandler, selectedCompanyId, COMPANIES_STOCK_MARKET }) => {
   const onClick = (companyOrderNo) => {
     onCompanyChangeHandler(companyOrderNo);
   };

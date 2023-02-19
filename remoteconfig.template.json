@@ -1,0 +1,11 @@
+{
+    "parameters": {
+      "COMPANIES_STOCK_MARKET_DATA": {
+        "defaultValue": {
+          "value": "[{\"id\":1803,\"name\":\"EXPOLANKA HOLDINGS PLC\",\"symbol\":\"EXPO.N0000\"},{\"id\":1847,\"name\":\"LOLC FINANCE PLC\",\"symbol\":\"LOFC.N0000\"},{\"id\":297,\"name\":\"JOHN KEELLS HOLDINGS PLC\",\"symbol\":\"JKH.N0000\"}]"
+        },
+        "description": "Sri Lankan Companies data of stock market (id, name, symbol)",
+        "valueType": "JSON"
+      }
+    }
+  }

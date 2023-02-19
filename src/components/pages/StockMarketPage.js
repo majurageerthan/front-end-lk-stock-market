@@ -10,10 +10,8 @@ import {
   Legend,
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
-import {
-  getFirestore, doc, getDoc, collection, getDocs,
-} from 'firebase/firestore';
-import { COMPANIES_STOCK_MARKET, STOCK_DB_FIREBASE_FIRE_STORE } from '../../utils/constants';
+import { doc, getDoc } from 'firebase/firestore/lite';
+import { STOCK_DB_FIREBASE_FIRE_STORE } from '../../utils/constants';
 import { getReadableFileNameTimeStampFromEpoch } from '../../utils/dateTimeHelpers';
 
 ChartJS.register(
@@ -39,15 +37,16 @@ const options = {
   },
 };
 
-const StockMarketPage = ({ selectedCompanyId, firebaseApp }) => {
+const StockMarketPage = ({
+  selectedCompanyId, fireStoreDb, COMPANIES_STOCK_MARKET,
+}) => {
   const [stockMarketData, setStockMarketData] = useState({});
 
   useEffect(() => {
     const initStockData = async () => {
       console.log(`initStockData ${selectedCompanyId}`);
 
-      const db = getFirestore(firebaseApp);
-      const docRef = doc(db, STOCK_DB_FIREBASE_FIRE_STORE, `${selectedCompanyId}`);
+      const docRef = doc(fireStoreDb, STOCK_DB_FIREBASE_FIRE_STORE, `${selectedCompanyId}`);
       const docSnap = await getDoc(docRef);
       if (docSnap.exists()) {
         const data = docSnap.data();
@@ -77,8 +76,10 @@ const StockMarketPage = ({ selectedCompanyId, firebaseApp }) => {
       }
     };
 
-    if (!stockMarketData[selectedCompanyId] || Object.keys(stockMarketData[selectedCompanyId])?.length === 0) {
-      initStockData();
+    if (selectedCompanyId) {
+      if (!stockMarketData[selectedCompanyId] || Object.keys(stockMarketData[selectedCompanyId])?.length === 0) {
+        initStockData();
+      }
     }
   }, [selectedCompanyId]);
 
