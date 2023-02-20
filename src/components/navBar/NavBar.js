@@ -1,27 +1,34 @@
+import StockButton from '../atom/StockButton';
 import styles from './styles.module.css';
 
 const NavBar = ({
   onCompanyChangeHandler, selectedCompanyId, COMPANIES_STOCK_MARKET, pinnedCompanies,
 }) => {
-  console.log(`ddd${pinnedCompanies}`);
-  const onClick = (companyOrderNo) => {
-    onCompanyChangeHandler(companyOrderNo);
-  };
-  const listItems = COMPANIES_STOCK_MARKET.filter((company) => !pinnedCompanies?.includes(company.id))?.map((data, number) => (
-    <li key={data.id + number.toString()} className={styles.btnContainer}>
-      <button onClick={() => onClick(data?.id)} type="button" className={data?.id === selectedCompanyId ? styles.active : styles.bn48}>
-        {COMPANIES_STOCK_MARKET.find((x) => x.id === data?.id).name}
-      </button>
-    </li>
-  ));
+  console.log(`pinnedCompanies: ${pinnedCompanies}`);
 
-  const pinnedListItems = COMPANIES_STOCK_MARKET.filter((company) => pinnedCompanies?.includes(company.id))?.map((data, number) => (
-    <li key={data.id + number.toString()} className={styles.btnContainer}>
-      <button onClick={() => onClick(data?.id)} type="button" className={data?.id === selectedCompanyId ? styles.active : styles.bn48}>
-        {COMPANIES_STOCK_MARKET.find((x) => x.id === data?.id).name}
-      </button>
-    </li>
-  ));
+  const listItems = COMPANIES_STOCK_MARKET?.filter((company) => !pinnedCompanies?.includes(company?.id))
+    ?.sort((a, b) => a?.name?.localeCompare(b?.name))
+    ?.map((data, index) => (
+      <StockButton
+        key={data.id + index.toString()}
+        data={data}
+        onClick={onCompanyChangeHandler}
+        selectedCompanyId={selectedCompanyId}
+        COMPANIES_STOCK_MARKET={COMPANIES_STOCK_MARKET}
+      />
+    ));
+
+  const pinnedListItems = COMPANIES_STOCK_MARKET?.filter((company) => pinnedCompanies?.includes(company?.id))
+    ?.sort((a, b) => a?.name?.localeCompare(b?.name))
+    ?.map((data, index) => (
+      <StockButton
+        key={data.id + index.toString()}
+        data={data}
+        onClick={onCompanyChangeHandler}
+        selectedCompanyId={selectedCompanyId}
+        COMPANIES_STOCK_MARKET={COMPANIES_STOCK_MARKET}
+      />
+    ));
 
   return (
     <div className={styles.container}>

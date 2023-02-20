@@ -53,7 +53,7 @@ const StockMarketPage = ({
         console.log('Document data:', data);
         const keys = Object.keys(data).sort((a, b) => a - b);
         const labels = keys.map((dateString) => getReadableFileNameTimeStampFromEpoch(Number(dateString)));
-        console.log(`label:${labels}`);
+        console.log(`label: ${labels}`);
 
         const datasets = [
           {
