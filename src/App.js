@@ -6,8 +6,8 @@ import { getFirestore } from 'firebase/firestore/lite';
 import StockMarketPage from './components/pages/StockMarketPage';
 import NavBar from './components/navBar/NavBar';
 import { FIREBASE_CONFIG_COMPANIES_STOCK_MARKET_DATA } from './utils/constants';
-import pinIcon from './pinIcon.png';
 import { getPinnedCompanyIds, removePinnedCompanyId, savePinnedCompanyId } from './utils/localStorageHelper';
+import StyledCornerRightButton from './components/atom/StyledCornerRightButton';
 
 const App = () => {
   const firebaseConfig = {
@@ -20,7 +20,10 @@ const App = () => {
     measurementId: process.env.REACT_APP_MEASUREMENT_ID,
   };
   const [COMPANIES_STOCK_MARKET, setCompaniesStockMarket] = useState([]);
+
   const [selectedCompanyId, setSelectedCompanyId] = useState(COMPANIES_STOCK_MARKET?.[0]?.id);
+  const [selectedCompany, setSelectedCompany] = useState(COMPANIES_STOCK_MARKET?.[0]);
+
   const [pinnedCompanies, setPinnedCompanies] = useState([]);
 
   useEffect(() => {
@@ -39,7 +42,8 @@ const App = () => {
     const jsonObject = JSON.parse(val);
     console.log('FIREBASE_CONFIG_COMPANIES_STOCK_MARKET_DATA', jsonObject);
     setCompaniesStockMarket(jsonObject);
-    setSelectedCompanyId(jsonObject?.[0]?.id);
+    setSelectedCompanyId(pinnedCompanies?.length ? pinnedCompanies?.[0] : jsonObject?.[0]?.id);
+    setSelectedCompany(jsonObject?.[0]);
   };
 
   if (!COMPANIES_STOCK_MARKET?.length) {
@@ -68,9 +72,10 @@ const App = () => {
         pinnedCompanies={pinnedCompanies}
       />
 
-      <div className="ribbon inner">
-        <img src={pinIcon} alt="Logo" onClick={onClickPinCompanyHandler} role="presentation" />
-      </div>
+      <StyledCornerRightButton
+        text={pinnedCompanies?.includes(selectedCompanyId) ? 'UNPIN' : 'PIN'}
+        onClick={onClickPinCompanyHandler}
+      />
 
       <StockMarketPage
         fireStoreDb={fireStoreDb}

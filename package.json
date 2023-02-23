@@ -7,7 +7,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "analyze": "npm run build && node scripts/analyze.js"
+    "analyze": "npm run build && node scripts/analyze.js",
+    "serve": "serve -s build -l 4000"
   },
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.5",
@@ -30,6 +31,7 @@
     "eslint-plugin-react": "^7.32.2",
     "eslint-plugin-react-hooks": "^4.6.0",
     "progress-bar-webpack-plugin": "^2.1.0",
+    "serve": "^14.2.0",
     "webpack-bundle-analyzer": "^4.8.0"
   },
   "eslintConfig": {
