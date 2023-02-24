@@ -13,6 +13,7 @@ import { Line } from 'react-chartjs-2';
 import { doc, getDoc } from 'firebase/firestore/lite';
 import { STOCK_DB_FIREBASE_FIRE_STORE } from '../../utils/constants';
 import { getReadableFileNameTimeStampFromEpoch } from '../../utils/dateTimeHelpers';
+import LoadingAnimationCenter from '../atom/LoadingAnimationCenter';
 
 ChartJS.register(
   CategoryScale,
@@ -86,8 +87,14 @@ const StockMarketPage = ({
   const isStockDataAvailable = selectedCompanyId && stockMarketData?.[selectedCompanyId] && Object.keys(stockMarketData?.[selectedCompanyId]).length !== 0;
 
   return (
-    <div style={{ height: '90%', width: '85%', marginLeft: '200px' }}>
-      {isStockDataAvailable && <Line options={options} data={stockMarketData?.[selectedCompanyId]} />}
+    <div style={{
+      height: '90%', width: '85%', marginLeft: '200px', textAlign: 'center',
+    }}
+    >
+      {isStockDataAvailable
+        ? <Line options={options} data={stockMarketData?.[selectedCompanyId]} />
+        : <LoadingAnimationCenter />}
+
     </div>
   );
 };

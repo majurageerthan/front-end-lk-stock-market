@@ -22,13 +22,17 @@ const App = () => {
   const [COMPANIES_STOCK_MARKET, setCompaniesStockMarket] = useState([]);
 
   const [selectedCompanyId, setSelectedCompanyId] = useState(COMPANIES_STOCK_MARKET?.[0]?.id);
-  const [selectedCompany, setSelectedCompany] = useState(COMPANIES_STOCK_MARKET?.[0]);
+  // const [selectedCompany, setSelectedCompany] = useState(COMPANIES_STOCK_MARKET?.[0]);
 
   const [pinnedCompanies, setPinnedCompanies] = useState([]);
 
   useEffect(() => {
     setPinnedCompanies(getPinnedCompanyIds());
   }, []);
+
+  useEffect(() => {
+    setSelectedCompanyId(pinnedCompanies?.length ? pinnedCompanies?.[0] : COMPANIES_STOCK_MARKET?.[0]?.id);
+  }, [COMPANIES_STOCK_MARKET]);
 
   const app = initializeApp(firebaseConfig);
   const remoteConfig = getRemoteConfig(app);
@@ -42,8 +46,6 @@ const App = () => {
     const jsonObject = JSON.parse(val);
     console.log('FIREBASE_CONFIG_COMPANIES_STOCK_MARKET_DATA', jsonObject);
     setCompaniesStockMarket(jsonObject);
-    setSelectedCompanyId(pinnedCompanies?.length ? pinnedCompanies?.[0] : jsonObject?.[0]?.id);
-    setSelectedCompany(jsonObject?.[0]);
   };
 
   if (!COMPANIES_STOCK_MARKET?.length) {
