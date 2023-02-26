@@ -39,9 +39,14 @@ const options = {
 };
 
 const StockMarketPage = ({
-  selectedCompanyId, fireStoreDb, COMPANIES_STOCK_MARKET,
+  selectedCompanyId, fireStoreDb, COMPANIES_STOCK_MARKET, isLoading,
 }) => {
   const [stockMarketData, setStockMarketData] = useState({});
+
+  useEffect(() => {
+    const isStockDataAvailable = selectedCompanyId && stockMarketData?.[selectedCompanyId] && Object.keys(stockMarketData?.[selectedCompanyId]).length !== 0;
+    isLoading(!isStockDataAvailable);
+  }, [selectedCompanyId, stockMarketData]);
 
   useEffect(() => {
     const initStockData = async () => {

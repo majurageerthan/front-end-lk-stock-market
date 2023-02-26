@@ -8,6 +8,7 @@ import NavBar from './components/navBar/NavBar';
 import { FIREBASE_CONFIG_COMPANIES_STOCK_MARKET_DATA } from './utils/constants';
 import { getPinnedCompanyIds, removePinnedCompanyId, savePinnedCompanyId } from './utils/localStorageHelper';
 import StyledCornerRightButton from './components/atom/StyledCornerRightButton';
+import StyledBottomCornerRightButton from './components/atom/StyledBottomCornerRightButton';
 
 const App = () => {
   const firebaseConfig = {
@@ -20,11 +21,13 @@ const App = () => {
     measurementId: process.env.REACT_APP_MEASUREMENT_ID,
   };
   const [COMPANIES_STOCK_MARKET, setCompaniesStockMarket] = useState([]);
+  const [loading, isLoading] = useState(true);
 
   const [selectedCompanyId, setSelectedCompanyId] = useState(COMPANIES_STOCK_MARKET?.[0]?.id);
   // const [selectedCompany, setSelectedCompany] = useState(COMPANIES_STOCK_MARKET?.[0]);
 
   const [pinnedCompanies, setPinnedCompanies] = useState([]);
+  const [nextCompaniesByPinned, setNextCompaniesByPinned] = useState([]);
 
   useEffect(() => {
     setPinnedCompanies(getPinnedCompanyIds());
@@ -34,18 +37,23 @@ const App = () => {
     setSelectedCompanyId(pinnedCompanies?.length ? pinnedCompanies?.[0] : COMPANIES_STOCK_MARKET?.[0]?.id);
   }, [COMPANIES_STOCK_MARKET]);
 
+  useEffect(() => {
+    const unPinnedCompaniesArray = COMPANIES_STOCK_MARKET?.filter((company) => !pinnedCompanies?.includes(company?.id));
+    const pinnedCompaniesArray = COMPANIES_STOCK_MARKET?.filter((company) => pinnedCompanies?.includes(company?.id));
+    setNextCompaniesByPinned([...pinnedCompaniesArray, ...unPinnedCompaniesArray]);
+  }, [pinnedCompanies, COMPANIES_STOCK_MARKET]);
+
   const app = initializeApp(firebaseConfig);
   const remoteConfig = getRemoteConfig(app);
-  // remoteConfig.settings.minimumFetchIntervalMillis = 1000000;
   const fireStoreDb = getFirestore(app);
 
   const fetchDataFromConfigAndUpdate = async () => {
     const isFetchedFromRemote = await fetchAndActivate(remoteConfig);
     console.log(`isFetchedFromRemote: ${isFetchedFromRemote}`);
     const val = getValue(remoteConfig, FIREBASE_CONFIG_COMPANIES_STOCK_MARKET_DATA).asString();
-    const jsonObject = JSON.parse(val);
-    console.log('FIREBASE_CONFIG_COMPANIES_STOCK_MARKET_DATA', jsonObject);
-    setCompaniesStockMarket(jsonObject);
+    const jsonSortedObject = JSON.parse(val)?.sort((a, b) => a?.name?.localeCompare(b?.name));
+    console.log('FIREBASE_CONFIG_COMPANIES_STOCK_MARKET_DATA', jsonSortedObject);
+    setCompaniesStockMarket(jsonSortedObject);
   };
 
   if (!COMPANIES_STOCK_MARKET?.length) {
@@ -64,7 +72,13 @@ const App = () => {
     setPinnedCompanies(getPinnedCompanyIds());
   };
 
-  // remoteConfig.settings.minimumFetchIntervalMillis = 3600000;
+  const onClickNextHandler = async () => {
+    const len = nextCompaniesByPinned.length;
+    const currentIndex = nextCompaniesByPinned?.findIndex((x) => x.id === selectedCompanyId);
+    const next = nextCompaniesByPinned[(currentIndex + 1) % len];
+    console.log(next);
+    setSelectedCompanyId(next?.id);
+  };
   return (
     <div>
       <NavBar
@@ -74,16 +88,26 @@ const App = () => {
         pinnedCompanies={pinnedCompanies}
       />
 
-      <StyledCornerRightButton
-        text={pinnedCompanies?.includes(selectedCompanyId) ? 'UNPIN' : 'PIN'}
-        onClick={onClickPinCompanyHandler}
-      />
+      {!loading && (
+      <>
+        <StyledCornerRightButton
+          text={pinnedCompanies?.includes(selectedCompanyId) ? 'UNPIN' : 'PIN'}
+          onClick={onClickPinCompanyHandler}
+        />
+        <StyledBottomCornerRightButton
+          text="NEXT"
+          onClick={onClickNextHandler}
+        />
+      </>
+      )}
 
       <StockMarketPage
         fireStoreDb={fireStoreDb}
         selectedCompanyId={selectedCompanyId}
         COMPANIES_STOCK_MARKET={COMPANIES_STOCK_MARKET}
+        isLoading={isLoading}
       />
+
     </div>
   );
 };

@@ -7,7 +7,6 @@ const NavBar = ({
   console.log(`pinnedCompanies: ${pinnedCompanies}`);
 
   const listItems = COMPANIES_STOCK_MARKET?.filter((company) => !pinnedCompanies?.includes(company?.id))
-    ?.sort((a, b) => a?.name?.localeCompare(b?.name))
     ?.map((data, index) => (
       <StockButton
         key={data.id + index.toString()}
@@ -19,7 +18,6 @@ const NavBar = ({
     ));
 
   const pinnedListItems = COMPANIES_STOCK_MARKET?.filter((company) => pinnedCompanies?.includes(company?.id))
-    ?.sort((a, b) => a?.name?.localeCompare(b?.name))
     ?.map((data, index) => (
       <StockButton
         key={data.id + index.toString()}
@@ -32,14 +30,26 @@ const NavBar = ({
 
   return (
     <div className={styles.container}>
-      <h2>Pinned</h2>
-      <ul className={styles.ulContainer}>
-        {pinnedListItems}
-      </ul>
-      {/* <br /> */}
-      <h2>Companies</h2>
-      <div />
-      <ul className={styles.ulContainer}>{listItems}</ul>
+      {Boolean(pinnedListItems?.length) && (
+      <>
+        <div className={styles.eight}>
+          <h2>Pinned</h2>
+        </div>
+        <ul className={styles.ulContainer}>
+          {pinnedListItems}
+        </ul>
+      </>
+      )}
+
+      {Boolean(listItems?.length) && (
+      <>
+        <div className={`${styles.three} ${styles.margin8Left}`}>
+          <h2>Companies</h2>
+        </div>
+        <ul className={styles.ulContainer}>{listItems}</ul>
+      </>
+      )}
+
     </div>
   );
 };
