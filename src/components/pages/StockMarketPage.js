@@ -56,7 +56,7 @@ const StockMarketPage = ({ selectedCompany, fireStoreDb, isLoading }) => {
     const initStockData = async () => {
       console.log(`initStockData ${selectedCompany?.id}`);
 
-      const docRef = doc(fireStoreDb, STOCK_DB_FIREBASE_FIRE_STORE, `${selectedCompany?.id}`);
+      const docRef = doc(fireStoreDb, STOCK_DB_FIREBASE_FIRE_STORE, `${selectedCompany.id}`);
       const docSnap = await getDoc(docRef);
       if (docSnap.exists()) {
         const data = docSnap.data();
