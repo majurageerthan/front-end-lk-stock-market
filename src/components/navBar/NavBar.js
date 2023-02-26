@@ -2,7 +2,7 @@ import StockButton from '../atom/StockButton';
 import styles from './styles.module.css';
 
 const NavBar = ({
-  onCompanyChangeHandler, selectedCompanyId, COMPANIES_STOCK_MARKET, pinnedCompanies,
+  onCompanyChangeHandler, selectedCompany, COMPANIES_STOCK_MARKET, pinnedCompanies,
 }) => {
   console.log(`pinnedCompanies: ${pinnedCompanies}`);
 
@@ -12,7 +12,7 @@ const NavBar = ({
         key={data.id + index.toString()}
         data={data}
         onClick={onCompanyChangeHandler}
-        selectedCompanyId={selectedCompanyId}
+        selectedCompany={selectedCompany}
         COMPANIES_STOCK_MARKET={COMPANIES_STOCK_MARKET}
       />
     ));
@@ -23,7 +23,7 @@ const NavBar = ({
         key={data.id + index.toString()}
         data={data}
         onClick={onCompanyChangeHandler}
-        selectedCompanyId={selectedCompanyId}
+        selectedCompany={selectedCompany}
         COMPANIES_STOCK_MARKET={COMPANIES_STOCK_MARKET}
       />
     ));
