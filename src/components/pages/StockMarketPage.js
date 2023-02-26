@@ -38,21 +38,25 @@ const options = {
   },
 };
 
-const StockMarketPage = ({
-  selectedCompanyId, fireStoreDb, COMPANIES_STOCK_MARKET, isLoading,
-}) => {
+const StockMarketPage = ({ selectedCompany, fireStoreDb, isLoading }) => {
   const [stockMarketData, setStockMarketData] = useState({});
 
   useEffect(() => {
-    const isStockDataAvailable = selectedCompanyId && stockMarketData?.[selectedCompanyId] && Object.keys(stockMarketData?.[selectedCompanyId]).length !== 0;
+    const isStockDataAvailable = selectedCompany?.id && stockMarketData?.[selectedCompany?.id] && Object.keys(stockMarketData?.[selectedCompany?.id]).length !== 0;
     isLoading(!isStockDataAvailable);
-  }, [selectedCompanyId, stockMarketData]);
+  }, [selectedCompany, stockMarketData]);
+
+  // useEffect(() => {
+  //   const docRef = doc(fireStoreDb, `${STOCK_DB_FIREBASE_FIRE_STORE}/${selectedCompany?.id}`, `${selectedCompany?.id}`);
+  // }, []);
 
   useEffect(() => {
-    const initStockData = async () => {
-      console.log(`initStockData ${selectedCompanyId}`);
+    console.log(`StockMarketPage:selectedCompany: ${selectedCompany}`);
 
-      const docRef = doc(fireStoreDb, STOCK_DB_FIREBASE_FIRE_STORE, `${selectedCompanyId}`);
+    const initStockData = async () => {
+      console.log(`initStockData ${selectedCompany?.id}`);
+
+      const docRef = doc(fireStoreDb, STOCK_DB_FIREBASE_FIRE_STORE, `${selectedCompany?.id}`);
       const docSnap = await getDoc(docRef);
       if (docSnap.exists()) {
         const data = docSnap.data();
@@ -63,7 +67,7 @@ const StockMarketPage = ({
 
         const datasets = [
           {
-            label: COMPANIES_STOCK_MARKET.find((x) => x.id === selectedCompanyId).name,
+            label: selectedCompany.name,
             data: keys.map((key) => data[key]),
             borderColor: 'rgb(255, 99, 132)',
             backgroundColor: 'rgba(255, 99, 132, 0.5)',
@@ -71,7 +75,7 @@ const StockMarketPage = ({
         ];
         setStockMarketData({
           ...stockMarketData,
-          [selectedCompanyId]: {
+          [selectedCompany.id]: {
             labels,
             datasets,
           },
@@ -82,14 +86,14 @@ const StockMarketPage = ({
       }
     };
 
-    if (selectedCompanyId) {
-      if (!stockMarketData[selectedCompanyId] || Object.keys(stockMarketData[selectedCompanyId])?.length === 0) {
+    if (selectedCompany?.id) {
+      if (!stockMarketData[selectedCompany.id] || Object.keys(stockMarketData[selectedCompany.id])?.length === 0) {
         initStockData();
       }
     }
-  }, [selectedCompanyId]);
+  }, [selectedCompany]);
 
-  const isStockDataAvailable = selectedCompanyId && stockMarketData?.[selectedCompanyId] && Object.keys(stockMarketData?.[selectedCompanyId]).length !== 0;
+  const isStockDataAvailable = selectedCompany?.id && stockMarketData?.[selectedCompany?.id] && Object.keys(stockMarketData?.[selectedCompany?.id]).length !== 0;
 
   return (
     <div style={{
@@ -97,7 +101,7 @@ const StockMarketPage = ({
     }}
     >
       {isStockDataAvailable
-        ? <Line options={options} data={stockMarketData?.[selectedCompanyId]} />
+        ? <Line options={options} data={stockMarketData?.[selectedCompany?.id]} />
         : <LoadingAnimationCenter />}
 
     </div>
