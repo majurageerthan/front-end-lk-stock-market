@@ -1,14 +1,18 @@
 import './App.css';
 import { initializeApp } from 'firebase/app';
-import { useEffect, useState } from 'react';
+import {
+  Suspense, lazy, useEffect, useState,
+} from 'react';
 import { getRemoteConfig, fetchAndActivate, getValue } from 'firebase/remote-config';
 import { getFirestore } from 'firebase/firestore/lite';
-import StockMarketPage from './components/pages/StockMarketPage';
-import NavBar from './components/navBar/NavBar';
 import { FIREBASE_CONFIG, FIREBASE_CONFIG_COMPANIES_STOCK_MARKET_DATA } from './utils/constants';
 import { getPinnedCompanyIds, removePinnedCompanyId, savePinnedCompanyId } from './utils/localStorageHelper';
 import StyledCornerRightButton from './components/atom/StyledCornerRightButton';
 import StyledBottomCornerRightButton from './components/atom/StyledBottomCornerRightButton';
+import LoadingAnimationCenter from './components/atom/LoadingAnimationCenter';
+
+const StockMarketPage = lazy(() => import('./components/pages/StockMarketPage'));
+const NavBar = lazy(() => import('./components/navBar/NavBar'));
 
 const App = () => {
   const [COMPANIES_STOCK_MARKET, setCompaniesStockMarket] = useState([]);
@@ -72,13 +76,6 @@ const App = () => {
 
   return (
     <div>
-      <NavBar
-        onCompanyChangeHandler={setSelectedCompany}
-        selectedCompany={selectedCompany}
-        COMPANIES_STOCK_MARKET={COMPANIES_STOCK_MARKET}
-        pinnedCompanies={pinnedCompanies}
-      />
-
       {!loading && (
       <>
         <StyledCornerRightButton
@@ -92,11 +89,19 @@ const App = () => {
       </>
       )}
 
-      <StockMarketPage
-        fireStoreDb={fireStoreDb}
-        selectedCompany={selectedCompany}
-        isLoading={isLoading}
-      />
+      <Suspense fallback={<LoadingAnimationCenter />}>
+        <NavBar
+          onCompanyChangeHandler={setSelectedCompany}
+          selectedCompany={selectedCompany}
+          COMPANIES_STOCK_MARKET={COMPANIES_STOCK_MARKET}
+          pinnedCompanies={pinnedCompanies}
+        />
+        <StockMarketPage
+          fireStoreDb={fireStoreDb}
+          selectedCompany={selectedCompany}
+          isLoading={isLoading}
+        />
+      </Suspense>
 
     </div>
   );
