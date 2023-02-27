@@ -42,7 +42,7 @@ const NavBar = ({
 
   return (
     <div className={styles.container}>
-      <input type="search" value={searchValue} onChange={onSearchTyped} placeholder="Search" />
+      {Boolean(COMPANIES_STOCK_MARKET?.length) && <input type="search" value={searchValue} onChange={onSearchTyped} placeholder="Search" />}
 
       {searchListItems?.length ? (
         <ul className={styles.ulContainer}>
@@ -72,6 +72,7 @@ const NavBar = ({
         </>
       )}
     </div>
+
   );
 };
 
