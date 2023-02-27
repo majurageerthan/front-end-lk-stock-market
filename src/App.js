@@ -5,10 +5,9 @@ import {
 } from 'react';
 import { getRemoteConfig, fetchAndActivate, getValue } from 'firebase/remote-config';
 import { getFirestore } from 'firebase/firestore/lite';
-import { FIREBASE_CONFIG, FIREBASE_CONFIG_COMPANIES_STOCK_MARKET_DATA } from './utils/constants';
+import { BUTTON_POSITIONS, FIREBASE_CONFIG, FIREBASE_CONFIG_COMPANIES_STOCK_MARKET_DATA } from './utils/constants';
 import { getPinnedCompanyIds, removePinnedCompanyId, savePinnedCompanyId } from './utils/localStorageHelper';
-import StyledCornerRightButton from './components/atom/StyledCornerRightButton';
-import StyledBottomCornerRightButton from './components/atom/StyledBottomCornerRightButton';
+import StyledFloatingButton from './components/atom/StyledFloatingButton';
 import LoadingAnimationCenter from './components/atom/LoadingAnimationCenter';
 
 const StockMarketPage = lazy(() => import('./components/pages/StockMarketPage'));
@@ -74,17 +73,32 @@ const App = () => {
     setSelectedCompany(next);
   };
 
+  const onClickPreviousHandler = async () => {
+    const len = nextCompaniesByPinned.length;
+    const currentIndex = nextCompaniesByPinned?.findIndex((x) => x.id === selectedCompany?.id);
+    const previous = nextCompaniesByPinned[(currentIndex + len - 1) % len];
+    console.log(previous);
+    setSelectedCompany(previous);
+  };
+
   return (
     <div>
       {!loading && (
       <>
-        <StyledCornerRightButton
+        <StyledFloatingButton
           text={pinnedCompanies?.includes(selectedCompany?.id) ? 'UNPIN' : 'PIN'}
           onClick={onClickPinCompanyHandler}
+          buttonPosition={BUTTON_POSITIONS.TOP_RIGHT_CORNER}
         />
-        <StyledBottomCornerRightButton
+        <StyledFloatingButton
+          text="PREVIOUS"
+          onClick={onClickPreviousHandler}
+          buttonPosition={BUTTON_POSITIONS.BOTTOM_RIGHT_CORNER_PREVIOUS}
+        />
+        <StyledFloatingButton
           text="NEXT"
           onClick={onClickNextHandler}
+          buttonPosition={BUTTON_POSITIONS.BOTTOM_RIGHT_CORNER}
         />
       </>
       )}

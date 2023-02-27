@@ -12,7 +12,7 @@ import {
 import { Line } from 'react-chartjs-2';
 import { doc, getDoc } from 'firebase/firestore/lite';
 import { STOCK_DB_FIREBASE_FIRE_STORE } from '../../utils/constants';
-import { getReadableFileNameTimeStampFromEpoch } from '../../utils/dateTimeHelpers';
+import { getReadableTimeStampFromEpoch } from '../../utils/dateTimeHelpers';
 import LoadingAnimationCenter from '../atom/LoadingAnimationCenter';
 
 ChartJS.register(
@@ -47,7 +47,22 @@ const StockMarketPage = ({ selectedCompany, fireStoreDb, isLoading }) => {
   }, [selectedCompany, stockMarketData]);
 
   // useEffect(() => {
-  //   const docRef = doc(fireStoreDb, `${STOCK_DB_FIREBASE_FIRE_STORE}/${selectedCompany?.id}`, `${selectedCompany?.id}`);
+  //   console.log('initStockMetaData:Document useEffect:');
+
+  //   const initStockMetaData = async () => {
+  //     const docRef = doc(fireStoreDb, `${STOCK_DB_FIREBASE_FIRE_STORE}/${selectedCompany.id}/${selectedCompany.name}`, 'highPrice');
+  //     const docSnap = await getDoc(docRef);
+  //     if (docSnap.exists()) {
+  //       const data = docSnap.data();
+  //       const epochKeys = Object.keys(data);
+  //       console.log('initStockMetaData:Document data:', data);
+  //       const keys = Object.keys(data).sort((a, b) => a - b);
+  //       const labels = keys.map((dateString) => getReadableTimeStampFromEpoch(Number(dateString)));
+  //       console.log(`label: ${labels}`);
+  //     }
+  //   };
+
+  //   initStockMetaData();
   // }, []);
 
   useEffect(() => {
@@ -62,7 +77,7 @@ const StockMarketPage = ({ selectedCompany, fireStoreDb, isLoading }) => {
         const data = docSnap.data();
         console.log('Document data:', data);
         const keys = Object.keys(data).sort((a, b) => a - b);
-        const labels = keys.map((dateString) => getReadableFileNameTimeStampFromEpoch(Number(dateString)));
+        const labels = keys.map((dateString) => getReadableTimeStampFromEpoch(Number(dateString)));
         console.log(`label: ${labels}`);
 
         const datasets = [
