@@ -19,6 +19,7 @@ const App = () => {
   const [selectedCompany, setSelectedCompany] = useState(COMPANIES_STOCK_MARKET?.[0]);
   const [pinnedCompanies, setPinnedCompanies] = useState([]);
   const [nextCompaniesByPinned, setNextCompaniesByPinned] = useState([]);
+  const [searchValue, setSearchValue] = useState('');
 
   useEffect(() => {
     setPinnedCompanies(getPinnedCompanyIds());
@@ -109,6 +110,8 @@ const App = () => {
           selectedCompany={selectedCompany}
           COMPANIES_STOCK_MARKET={COMPANIES_STOCK_MARKET}
           pinnedCompanies={pinnedCompanies}
+          searchValue={searchValue}
+          onSearchTyped={(event) => setSearchValue(event?.target?.value)}
         />
         <StockMarketPage
           fireStoreDb={fireStoreDb}
