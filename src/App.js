@@ -1,14 +1,14 @@
 import './App.css';
-import { initializeApp } from 'firebase/app';
 import {
   Suspense, lazy, useEffect, useState,
 } from 'react';
-import { getRemoteConfig, fetchAndActivate, getValue } from 'firebase/remote-config';
-import { getFirestore } from 'firebase/firestore/lite';
-import { BUTTON_POSITIONS, FIREBASE_CONFIG, FIREBASE_CONFIG_COMPANIES_STOCK_MARKET_DATA } from './utils/constants';
+import { fetchAndActivate, getValue } from 'firebase/remote-config';
+
+import { BUTTON_POSITIONS, FIREBASE_CONFIG_COMPANIES_STOCK_MARKET_DATA } from './utils/constants';
 import { getPinnedCompanyIds, removePinnedCompanyId, savePinnedCompanyId } from './utils/localStorageHelper';
 import StyledFloatingButton from './components/atom/StyledFloatingButton';
 import LoadingAnimationCenter from './components/atom/LoadingAnimationCenter';
+import { remoteConfigFirebase } from './utils/firebaseHelper';
 
 const StockMarketPage = lazy(() => import('./components/pages/StockMarketPage'));
 const NavBar = lazy(() => import('./components/navBar/NavBar'));
@@ -37,14 +37,10 @@ const App = () => {
     setNextCompaniesByPinned([...pinnedCompaniesArray, ...unPinnedCompaniesArray]);
   }, [pinnedCompanies, COMPANIES_STOCK_MARKET]);
 
-  const app = initializeApp(FIREBASE_CONFIG);
-  const remoteConfig = getRemoteConfig(app);
-  const fireStoreDb = getFirestore(app);
-
   const fetchDataFromConfigAndUpdate = async () => {
-    const isFetchedFromRemote = await fetchAndActivate(remoteConfig);
+    const isFetchedFromRemote = await fetchAndActivate(remoteConfigFirebase);
     console.log(`isFetchedFromRemote: ${isFetchedFromRemote}`);
-    const val = getValue(remoteConfig, FIREBASE_CONFIG_COMPANIES_STOCK_MARKET_DATA).asString();
+    const val = getValue(remoteConfigFirebase, FIREBASE_CONFIG_COMPANIES_STOCK_MARKET_DATA).asString();
     const jsonSortedObject = JSON.parse(val)?.sort((a, b) => a?.name?.localeCompare(b?.name));
     console.log('FIREBASE_CONFIG_COMPANIES_STOCK_MARKET_DATA', jsonSortedObject);
     setCompaniesStockMarket(jsonSortedObject);
@@ -114,7 +110,6 @@ const App = () => {
           onSearchTyped={(event) => setSearchValue(event?.target?.value)}
         />
         <StockMarketPage
-          fireStoreDb={fireStoreDb}
           selectedCompany={selectedCompany}
           isLoading={isLoading}
         />

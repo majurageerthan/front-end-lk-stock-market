@@ -14,6 +14,7 @@ import { doc, getDoc } from 'firebase/firestore/lite';
 import { STOCK_DB_FIREBASE_FIRE_STORE } from '../../utils/constants';
 import { getReadableTimeStampFromEpoch } from '../../utils/dateTimeHelpers';
 import LoadingAnimationCenter from '../atom/LoadingAnimationCenter';
+import { fireStoreDbFirebase } from '../../utils/firebaseHelper';
 
 ChartJS.register(
   CategoryScale,
@@ -38,7 +39,7 @@ const options = {
   },
 };
 
-const StockMarketPage = ({ selectedCompany, fireStoreDb, isLoading }) => {
+const StockMarketPage = ({ selectedCompany, isLoading }) => {
   const [stockMarketData, setStockMarketData] = useState({});
 
   useEffect(() => {
@@ -71,7 +72,7 @@ const StockMarketPage = ({ selectedCompany, fireStoreDb, isLoading }) => {
     const initStockData = async () => {
       console.log(`initStockData ${selectedCompany?.id}`);
 
-      const docRef = doc(fireStoreDb, STOCK_DB_FIREBASE_FIRE_STORE, `${selectedCompany.id}`);
+      const docRef = doc(fireStoreDbFirebase, STOCK_DB_FIREBASE_FIRE_STORE, `${selectedCompany.id}`);
       const docSnap = await getDoc(docRef);
       if (docSnap.exists()) {
         const data = docSnap.data();
