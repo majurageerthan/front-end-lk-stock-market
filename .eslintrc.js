@@ -28,5 +28,6 @@ module.exports = {
     'max-len': ['error', { code: 200 }],
     'react/jsx-props-no-spreading': 'off',
     'jsx-a11y/click-events-have-key-events': 'off',
+    'react/jsx-no-useless-fragment': 'off',
   },
 };

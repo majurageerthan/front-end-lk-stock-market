@@ -1,30 +1,10 @@
 import { useEffect, useState } from 'react';
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-} from 'chart.js';
 import { Line } from 'react-chartjs-2';
 import { doc, getDoc } from 'firebase/firestore/lite';
-import { STOCK_DB_FIREBASE_FIRE_STORE } from '../../utils/constants';
-import { getReadableTimeStampFromEpoch } from '../../utils/dateTimeHelpers';
-import LoadingAnimationCenter from '../atom/LoadingAnimationCenter';
-import { fireStoreDbFirebase } from '../../utils/firebaseHelper';
-
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-);
+import { STOCK_DB_FIREBASE_FIRE_STORE } from '../../../utils/constants';
+import { getReadableTimeStampFromEpoch } from '../../../utils/dateTimeHelpers';
+import LoadingAnimationCenter from '../../atom/LoadingAnimationCenter';
+import { fireStoreDbFirebase } from '../../../utils/firebaseHelper';
 
 const options = {
   responsive: true,
@@ -39,7 +19,7 @@ const options = {
   },
 };
 
-const StockMarketPage = ({ selectedCompany, isLoading }) => {
+const HourlyStockMarketPage = ({ selectedCompany, isLoading }) => {
   const [stockMarketData, setStockMarketData] = useState({});
 
   useEffect(() => {
@@ -67,7 +47,7 @@ const StockMarketPage = ({ selectedCompany, isLoading }) => {
   // }, []);
 
   useEffect(() => {
-    console.log(`StockMarketPage:selectedCompany: ${selectedCompany}`);
+    console.log(`HourlyStockMarketPage:selectedCompany: ${selectedCompany}`);
 
     const initStockData = async () => {
       console.log(`initStockData ${selectedCompany?.id}`);
@@ -124,4 +104,4 @@ const StockMarketPage = ({ selectedCompany, isLoading }) => {
   );
 };
 
-export default StockMarketPage;
+export default HourlyStockMarketPage;

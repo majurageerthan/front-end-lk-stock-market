@@ -20,6 +20,7 @@ const App = () => {
   const [pinnedCompanies, setPinnedCompanies] = useState([]);
   const [nextCompaniesByPinned, setNextCompaniesByPinned] = useState([]);
   const [searchValue, setSearchValue] = useState('');
+  const [isDailySummarySelected, setDailySummarySelected] = useState(true);
 
   useEffect(() => {
     setPinnedCompanies(getPinnedCompanyIds());
@@ -108,10 +109,12 @@ const App = () => {
           pinnedCompanies={pinnedCompanies}
           searchValue={searchValue}
           onSearchTyped={(event) => setSearchValue(event?.target?.value)}
+          setDailySummarySelected={setDailySummarySelected}
         />
         <StockMarketPage
           selectedCompany={selectedCompany}
           isLoading={isLoading}
+          isDailySummarySelected={isDailySummarySelected}
         />
       </Suspense>
 

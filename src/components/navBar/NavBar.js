@@ -1,9 +1,10 @@
 import StockButton from '../atom/StockButton';
+import SwitchWithText from '../atom/SwitchWithText';
 import styles from './styles.module.css';
 
 const NavBar = ({
   onCompanyChangeHandler, selectedCompany, COMPANIES_STOCK_MARKET, pinnedCompanies,
-  searchValue, onSearchTyped,
+  searchValue, onSearchTyped, setDailySummarySelected,
 }) => {
   const listItems = COMPANIES_STOCK_MARKET?.filter((company) => !pinnedCompanies?.includes(company?.id))
     ?.map((data, index) => (
@@ -42,6 +43,7 @@ const NavBar = ({
 
   return (
     <div className={styles.container}>
+      <SwitchWithText onChange={setDailySummarySelected} />
       {Boolean(COMPANIES_STOCK_MARKET?.length) && <input type="search" value={searchValue} onChange={onSearchTyped} placeholder="Search" />}
 
       {searchListItems?.length ? (

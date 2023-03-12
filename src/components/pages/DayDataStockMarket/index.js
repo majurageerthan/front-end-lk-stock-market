@@ -1,30 +1,13 @@
 import { useEffect, useState, useReducer } from 'react';
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-} from 'chart.js';
 import { Line } from 'react-chartjs-2';
 import { doc, getDoc } from 'firebase/firestore/lite';
-import { STOCK_DB_FIREBASE_FIRE_STORE } from '../../../utils/constants';
+import {
+  HIGH_PRICE_COLOR_CODES, LOW_PRICE_COLOR_CODES, STOCK_DB_FIREBASE_FIRE_STORE, STOCKS_META_DATA_FIRESTORE,
+  ACTION_TYPES_DAILY_DATA, TITLES_DAILY_DATA, DEFAULT_DATA_SET_STATE,
+} from '../../../utils/constants';
 import { getEpochFromDateString } from '../../../utils/dateTimeHelpers';
 import LoadingAnimationCenter from '../../atom/LoadingAnimationCenter';
 import { fireStoreDbFirebase } from '../../../utils/firebaseHelper';
-
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-);
 
 const options = {
   responsive: true,
@@ -39,43 +22,6 @@ const options = {
   },
 };
 
-const STOCKS_META_DATA_FIRESTORE = {
-  HIGH_PRICE: 'highPrice',
-  LOW_PRICE: 'lowPrice',
-  SHARES_VOLUME: 'shareVolume',
-  TRADE_VOLUME: 'tradeVolume',
-};
-
-const ACTION_TYPES_DAILY_DATA = {
-  HIGH_PRICE: 'HIGH_PRICE',
-  LOW_PRICE: 'LOW_PRICE',
-  SHARES_VOLUME: 'SHARES_VOLUME',
-  TRADE_VOLUME: 'TRADE_VOLUME',
-  DATE_ONLY: 'DATE_ONLY',
-};
-
-const TITLES_DAILY_DATA = {
-  HIGH_PRICE: 'HIGH PRICE',
-  LOW_PRICE: 'LOW PRICE',
-  SHARES_VOLUME: 'SHARES VOLUME',
-  TRADE_VOLUME: 'TRADE VOLUME',
-};
-
-const defaultDataSetState = [
-  {
-    label: TITLES_DAILY_DATA.HIGH_PRICE,
-    data: [],
-    borderColor: 'rgb(255, 99, 132)',
-    backgroundColor: 'rgba(255, 99, 132, 0.5)',
-  },
-  {
-    label: TITLES_DAILY_DATA.LOW_PRICE,
-    data: [],
-    borderColor: 'rgb(53, 162, 235)',
-    backgroundColor: 'rgba(53, 162, 235, 0.5)',
-  },
-];
-
 const dispatchDailyStocksReducer = (state, action) => {
   switch (action?.type) {
     case ACTION_TYPES_DAILY_DATA.HIGH_PRICE: return [
@@ -83,8 +29,8 @@ const dispatchDailyStocksReducer = (state, action) => {
       {
         label: TITLES_DAILY_DATA.HIGH_PRICE,
         data: action.highPrice,
-        borderColor: 'rgb(255, 99, 132)',
-        backgroundColor: 'rgba(255, 99, 132, 0.5)',
+        borderColor: HIGH_PRICE_COLOR_CODES.GRAPH_BORDER_COLOR,
+        backgroundColor: HIGH_PRICE_COLOR_CODES.GRAPH_BACKGROUND_COLOR,
       },
     ];
     case ACTION_TYPES_DAILY_DATA.LOW_PRICE: return [
@@ -92,37 +38,18 @@ const dispatchDailyStocksReducer = (state, action) => {
       {
         label: TITLES_DAILY_DATA.LOW_PRICE,
         data: action.lowPrice,
-        borderColor: 'rgb(53, 162, 235)',
-        backgroundColor: 'rgba(53, 162, 235, 0.5)',
+        borderColor: LOW_PRICE_COLOR_CODES.GRAPH_BORDER_COLOR,
+        backgroundColor: LOW_PRICE_COLOR_CODES.GRAPH_BACKGROUND_COLOR,
       },
     ];
 
     default:
-      return defaultDataSetState;
-  }
-};
-
-const dispatchLabelsDailyStocksReducer = (state, action) => {
-  switch (action?.type) {
-    case ACTION_TYPES_DAILY_DATA.SHARES_VOLUME: return [
-      ...state.filter((data) => data.label !== TITLES_DAILY_DATA.SHARES_VOLUME),
-      {
-        label: TITLES_DAILY_DATA.SHARES_VOLUME,
-        data: action.shareVolume,
-        borderColor: 'rgb(255, 99, 132)',
-        backgroundColor: 'rgba(255, 99, 132, 0.5)',
-      },
-    ];
-
-    case ACTION_TYPES_DAILY_DATA.DATE_ONLY:
-      return [...action.data];
-    default:
-      return defaultDataSetState;
+      return DEFAULT_DATA_SET_STATE;
   }
 };
 
 const DayDataStockMarket = ({ selectedCompany, isLoading }) => {
-  const [dailyStocksDataSetState, dispatchDailyStocksDataSet] = useReducer(dispatchDailyStocksReducer, defaultDataSetState);
+  const [dailyStocksDataSetState, dispatchDailyStocksDataSet] = useReducer(dispatchDailyStocksReducer, DEFAULT_DATA_SET_STATE);
   const [dailyStocksDataSetLabel, setDailyStocksDataSetLabel] = useState([]);
   const [shareVolume, setShareVolume] = useState({});
   const [tradeVolume, setTradeVolume] = useState({});
@@ -177,7 +104,7 @@ const DayDataStockMarket = ({ selectedCompany, isLoading }) => {
         const keysWithMetaData = keys.map((key) => [key, 'SV:', 'TV:']);
         setDailyStocksDataSetLabel(keysWithMetaData);
         console.log(`label: ${keys}`);
-        options.plugins.title.text = selectedCompany.name;
+        options.plugins.title.text = [selectedCompany.name, '[ SV: Share Volume, TV: Trade Volume ]'];
         const pricesInkeyOrder = keys.map((key) => data[key]);
         switch (stockMetaDataValue) {
           case STOCKS_META_DATA_FIRESTORE.HIGH_PRICE:
