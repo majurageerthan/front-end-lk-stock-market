@@ -8,6 +8,15 @@ import { fireStoreDbFirebase } from '../../../utils/firebaseHelper';
 
 const options = {
   responsive: true,
+  scales: {
+    x: {
+      ticks: {
+        display: true,
+        autoSkip: true,
+        maxTicksLimit: 10,
+      },
+    },
+  },
   plugins: {
     legend: {
       position: 'top',

@@ -11,6 +11,15 @@ import { fireStoreDbFirebase } from '../../../utils/firebaseHelper';
 
 const options = {
   responsive: true,
+  scales: {
+    x: {
+      ticks: {
+        display: true,
+        autoSkip: true,
+        maxTicksLimit: 15,
+      },
+    },
+  },
   plugins: {
     legend: {
       position: 'top',
@@ -21,6 +30,8 @@ const options = {
     },
   },
 };
+
+// TODO: Change data to object notation https://stackoverflow.com/a/68561933/7765316
 
 const dispatchDailyStocksReducer = (state, action) => {
   switch (action?.type) {
@@ -101,7 +112,7 @@ const DayDataStockMarket = ({ selectedCompany, isLoading }) => {
         const data = docSnap.data();
         console.log(`initStockMetaData:Document data:${stockMetaDataValue}: `, data);
         const keys = Object.keys(data).sort((a, b) => getEpochFromDateString(a) - getEpochFromDateString(b));
-        const keysWithMetaData = keys.map((key) => [key, 'SV:', 'TV:']);
+        const keysWithMetaData = keys.map((key) => [key, '', '']);
         setDailyStocksDataSetLabel(keysWithMetaData);
         console.log(`label: ${keys}`);
         options.plugins.title.text = [selectedCompany.name, '[ SV: Share Volume, TV: Trade Volume ]'];
