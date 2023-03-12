@@ -11,9 +11,9 @@ const options = {
   scales: {
     x: {
       ticks: {
-        display: true,
         autoSkip: true,
         maxTicksLimit: 10,
+        align: 'center',
       },
     },
   },
