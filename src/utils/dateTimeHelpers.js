@@ -10,3 +10,7 @@ export const getCurrentReadableFileNameTimeStamp = () => DateTime.now().toFormat
 export const getReadableTimeStampFromEpoch = (epochMs) => DateTime.fromMillis(epochMs).toFormat(DATE_TIME_FORMAT_2);
 
 export const getEpochFromDateString = (dateString) => DateTime.fromFormat(dateString, DATE_ONLY_TIME_FORMAT).toMillis();
+
+export const getDaysInMonth = (month, year) => (new Array(31)).fill('').map((v, i) => new Date(year, month - 1, i + 1)).filter((v) => v.getMonth() === month - 1);
+
+export const getDaysStringsInMonth = (month, year) => getDaysInMonth(month, year).map((date) => DateTime.fromJSDate(date).toFormat(DATE_ONLY_TIME_FORMAT));

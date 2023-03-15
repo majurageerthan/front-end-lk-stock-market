@@ -19,28 +19,28 @@
   font-size: 17px;
   border-radius: .25rem;
   transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
-  color: #0d6efd;
+  color: black;
   text-align: left;
   width: 195px;
   padding-bottom: 6px;
 }
 
 .bn48:hover {
-  color: #fff;
-  background-color: #0d6efd;
-  border-color: #0d6efd;
+  color: black;
+  background-color: #CAF4F4;
+  border-color: #CAF4F4;
 }
 
 .bn48:active {
-  color: #fff;
-  background-color: #0d6efd;
-  border-color: #0d6efd;
+  color: black;
+  background-color: #CAF4F4;
+  border-color: #CAF4F4;
 }
 
 .active {
-  color: #fff;
-  background-color: #0d6efd;
-  border-color: #0d6efd;
+  color: black;
+  background-color: #CAF4F4;
+  border-color: #CAF4F4;
   cursor: pointer;
   outline: 0;
   display: inline-block;
